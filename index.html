@@ -2,42 +2,143 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InventoRISDA v3.12</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>InventoRISDA v3.12 | RISDA Kedah</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0056b3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 30px; background-color: #f0f2f5; margin: 0; }
-        .login-container { background: white; padding: 40px 20px; border-radius: 20px; display: inline-block; width: 90%; max-width: 400px; box-shadow: 0px 10px 25px rgba(0,0,0,0.1); margin-top: 50px; }
-        img { margin-bottom: 20px; filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.1)); }
-        h2 { color: #333; margin-bottom: 10px; }
-        p { color: #666; font-size: 14px; margin-bottom: 25px; }
-        input { padding: 15px; width: 85%; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 15px; font-size: 16px; outline: none; }
-        input:focus { border-color: #0056b3; box-shadow: 0 0 5px rgba(0,86,179,0.3); }
-        button { padding: 15px; width: 93%; background-color: #0056b3; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
-        button:hover { background-color: #004494; transform: translateY(-2px); }
-        #message { margin-top: 15px; font-size: 14px; font-weight: 500; min-height: 20px; }
-        .footer { margin-top: 30px; font-size: 12px; color: #999; }
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #666;
+            --success: #28a745;
+            --error: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px 25px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img {
+            width: 120px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        h2 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 24px;
+        }
+
+        .version-badge {
+            font-size: 12px;
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            vertical-align: middle;
+        }
+
+        p.subtitle {
+            color: var(--text-light);
+            font-size: 14px;
+            margin: 10px 0 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #message {
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+            font-weight: 500;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <img src="logo-risda.png" alt="Logo RISDA" width="120" onerror="this.src='https://via.placeholder.com/120?text=RISDA'">
-        <h2>InventoRISDA <small style="font-size: 12px; color: #0056b3;">v3.12</small></h2>
-        <p>Sila log masuk dengan emel rasmi untuk permohonan stok (Kedah).</p>
+    <div class="login-card">
+        <img src="logo-risda.png" alt="RISDA" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=RISDA'">
         
-        <input type="email" id="emailInput" placeholder="nama@risda.gov.my">
-        <br>
-        <button onclick="checkEmail()">Log Masuk</button>
-        
-        <div id="message"></div>
-    </div>
+        <h2>InventoRISDA <span class="version-badge">v3.12</span></h2>
+        <p class="subtitle">Sistem Pengurusan Inventori <br><strong>RISDA Negeri Kedah</strong></p>
 
-    <div class="footer">
-        &copy; Inovasi Pentadbiran RISDA Kedah
+        <div class="input-group">
+            <input type="email" id="emailInput" placeholder="Emel Rasmi (@risda.gov.my)" autocomplete="email">
+        </div>
+
+        <button onclick="prosesLogin()">Log Masuk</button>
+
+        <div id="message"></div>
+
+        <div class="footer">
+            &copy; 2026 PRN KEDAH | Pilot Test Mode
+        </div>
     </div>
 
     <script>
@@ -95,36 +196,55 @@
             "noashamz@gmail.com" // Untuk tujuan testing anda
         ];
 
-        function checkEmail() {
+        // 2. URL SISTEM (GOOGLE APPS SCRIPT)
+        const URL_SISTEM = "https://script.google.com/a/macros/risda.gov.my/s/AKfycbzCNdKE-WAuZrbHdCukEV16J1H4fZvb00MvkcAdg2Fq6xa6nREr77sik1RWWCsMrZ3D/exec";
+
+        // 3. FUNGSI LOG MASUK
+        function prosesLogin() {
             const email = document.getElementById('emailInput').value.toLowerCase().trim();
             const msg = document.getElementById('message');
 
-            if (email === "") {
-                msg.style.color = "orange";
-                msg.innerHTML = "Sila masukkan emel anda.";
+            if (!email) {
+                paparMesej("Sila masukkan emel anda.", "orange");
                 return;
             }
 
+            // Semak jika emel ada dalam whitelist
             if (senaraiPegawai.includes(email)) {
-                msg.style.color = "green";
-                msg.innerHTML = "Akses Diterima! Membuka borang...";
+                paparMesej("Akses Diterima! Membuka sistem...", "green");
                 
-                // GANTIKAN LINK GOOGLE FORM ANDA DI BAWAH
+                // Simpan emel dalam memori telefon (Remember Me)
+                localStorage.setItem("inventorisda_email", email);
+
+                // Redirect ke Google Apps Script selepas 1.2 saat
                 setTimeout(() => {
-                    window.location.href = "https://forms.gle/ContohBorangAnda"; 
-                }, 1500);
+                    window.location.href = URL_SISTEM;
+                }, 1200);
             } else {
-                msg.style.color = "red";
-                msg.innerHTML = "Emel tidak berdaftar dalam sistem.";
+                paparMesej("Emel tidak berdaftar. Sila hubungi Admin PRN Kedah.", "red");
             }
         }
 
-        // PENDAFTARAN SERVICE WORKER (UNTUK PWA)
+        function paparMesej(teks, warna) {
+            const msg = document.getElementById('message');
+            msg.innerText = teks;
+            msg.style.color = (warna === "green") ? "#28a745" : (warna === "red") ? "#dc3545" : "#fd7e14";
+        }
+
+        // 4. AUTO-FILL JIKA PERNAH LOG MASUK
+        window.onload = () => {
+            const savedEmail = localStorage.getItem("inventorisda_email");
+            if (savedEmail) {
+                document.getElementById('emailInput').value = savedEmail;
+            }
+        };
+
+        // 5. PENDAFTARAN PWA (SERVICE WORKER)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('PWA v3.12 Aktif'))
-                .catch(err => console.error('PWA Gagal:', err));
+                .then(reg => console.log('PWA v3.12 Ready'))
+                .catch(err => console.log('PWA Error', err));
             });
         }
     </script>
