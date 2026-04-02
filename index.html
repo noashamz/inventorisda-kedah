@@ -1,12 +1,16 @@
 <head>
-    <link rel="manifest" href="./manifest.json">
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InventoRISDA v3.12</title>
+    <link rel="manifest" href="manifest.json">
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('v3.12 Berjaya Didaftar'))
-                .catch(err => console.log('Ralat PWA:', err));
+            navigator.serviceWorker.register('sw.js', { scope: './' })
+            .then(function(registration) {
+                console.log('Registration successful, scope is:', registration.scope);
+            })
+            .catch(function(error) {
+                console.log('Service worker registration failed, error:', error);
             });
         }
     </script>
