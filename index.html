@@ -13,59 +13,64 @@
     <style>
         :root {
             --primary-color: #0056b3;
-            --secondary-color: #f8f9fa;
-            --text-dark: #333;
-            --text-light: #666;
-            --success: #28a745;
-            --error: #dc3545;
+            --primary-dark: #003d80;
+            --bg-gradient: linear-gradient(135deg, #e9ecef 0%, #cbd3da 100%);
+            --text-dark: #2d3436;
+            --text-light: #636e72;
         }
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #e9ecef;
+            background: var(--bg-gradient);
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden; /* Mengelakkan scrolling pada mobile */
         }
 
         .login-card {
-            background: white;
-            padding: 40px 25px;
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 380px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            width: 85%;
+            max-width: 400px;
             text-align: center;
-            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .logo-img {
-            width: 120px;
+            width: 110px;
+            height: auto;
             margin-bottom: 20px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.08));
         }
 
         h2 {
             margin: 0;
             color: var(--text-dark);
-            font-size: 24px;
+            font-size: 26px;
+            letter-spacing: -0.5px;
         }
 
         .version-badge {
-            font-size: 12px;
+            font-size: 11px;
             background: var(--primary-color);
             color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
+            padding: 3px 10px;
+            border-radius: 12px;
             vertical-align: middle;
+            font-weight: 600;
         }
 
         p.subtitle {
             color: var(--text-light);
-            font-size: 14px;
-            margin: 10px 0 30px;
+            font-size: 15px;
+            line-height: 1.4;
+            margin: 12px 0 32px;
         }
 
         .input-group {
@@ -74,49 +79,68 @@
 
         input[type="email"] {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #eee;
-            border-radius: 12px;
+            padding: 18px;
+            border: 2px solid #dfe6e9;
+            border-radius: 16px;
             font-size: 16px;
             box-sizing: border-box;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            background: #fdfdfd;
+            -webkit-appearance: none; /* Buang shadow dalam iOS */
         }
 
         input[type="email"]:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
+            background: #fff;
         }
 
         button {
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 16px;
+            font-size: 17px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 86, 179, 0.2);
         }
 
         button:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
+            background-color: var(--primary-dark);
+        }
+
+        button:disabled {
+            background-color: #a5b1c2;
+            cursor: not-allowed;
         }
 
         #message {
-            margin-top: 15px;
+            margin-top: 20px;
             font-size: 14px;
-            min-height: 20px;
+            min-height: 22px;
             font-weight: 500;
         }
 
         .footer {
-            margin-top: 30px;
-            font-size: 11px;
-            color: #aaa;
+            margin-top: 35px;
+            font-size: 10px;
+            color: #95a5a6;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+        }
+
+        /* Responsif tambahan untuk skrip kecil (seperti iPhone SE) */
+        @media (max-height: 600px) {
+            .login-card { padding: 25px 20px; }
+            .logo-img { width: 80px; }
+            h2 { font-size: 22px; }
+            p.subtitle { margin-bottom: 20px; }
         }
     </style>
 </head>
@@ -126,13 +150,16 @@
         <img src="logo-risda.png" alt="RISDA" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=RISDA'">
         
         <h2>InventoRISDA <span class="version-badge">v3.22</span></h2>
-        <p class="subtitle">Sistem Pengurusan Inventori Alat Tulis <br><strong>RISDA Kedah</strong></p>
+        <p class="subtitle">Sistem Pengurusan Inventori Alat Tulis <br><strong>RISDA Negeri Kedah</strong></p>
 
         <div class="input-group">
-            <input type="email" id="emailInput" placeholder="Emel Rasmi (@risda.gov.my)" autocomplete="email">
+            <input type="email" id="emailInput" 
+                   placeholder="Emel Rasmi (@risda.gov.my)" 
+                   autocomplete="email" 
+                   inputmode="email">
         </div>
 
-        <button onclick="prosesLogin()">Log Masuk</button>
+        <button id="loginBtn" onclick="prosesLogin()">Log Masuk</button>
 
         <div id="message"></div>
 
@@ -142,7 +169,6 @@
     </div>
 
     <script>
-        // 1. SENARAI EMEL PEGAWAI DIBENARKAN
         const senaraiPegawai = [
             "a.s.syahir@risda.gov.my", "anuar.aziz@risda.gov.my", "marliana@risda.gov.my",
             "rodzi@risda.gov.my", "hakim.yussoff@risda.gov.my", "mohamad_fahmi@risda.gov.my",
@@ -163,13 +189,19 @@
             "zolkifli@risda.gov.my", "noashamz@gmail.com"
         ];
 
-        // 2. URL SISTEM (GOOGLE APPS SCRIPT)
         const URL_SISTEM = "https://script.google.com/a/macros/risda.gov.my/s/AKfycbye7THpRIGErYhCF5H7VbRjkA6NW5mFMOu5Mz0QYrk7xNoSJmqvijAWCM3IY_ZMXW4E/exec";
 
-        // 3. FUNGSI LOG MASUK
+        // Fungsi Detect "Enter" key
+        document.getElementById('emailInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                prosesLogin();
+            }
+        });
+
         function prosesLogin() {
-            const email = document.getElementById('emailInput').value.toLowerCase().trim();
-            const msg = document.getElementById('message');
+            const emailInput = document.getElementById('emailInput');
+            const btn = document.getElementById('loginBtn');
+            const email = emailInput.value.toLowerCase().trim();
 
             if (!email) {
                 paparMesej("Sila masukkan emel anda.", "orange");
@@ -177,20 +209,28 @@
             }
 
             if (senaraiPegawai.includes(email)) {
+                // Visual Loading State
+                btn.disabled = true;
+                btn.innerText = "Sila Tunggu...";
                 paparMesej("Akses Diterima! Membuka sistem...", "green");
+                
                 localStorage.setItem("inventorisda_email", email);
+
                 setTimeout(() => {
                     window.location.href = URL_SISTEM;
-                }, 1200);
+                }, 1000);
             } else {
-                paparMesej("Emel tidak berdaftar. Sila hubungi Admin RISDA Kedah.", "red");
+                paparMesej("Emel tidak berdaftar. Hubungi Admin.", "red");
+                emailInput.focus();
             }
         }
 
         function paparMesej(teks, warna) {
             const msg = document.getElementById('message');
             msg.innerText = teks;
-            msg.style.color = (warna === "green") ? "#28a745" : (warna === "red") ? "#dc3545" : "#fd7e14";
+            if(warna === "green") msg.style.color = "#2ecc71";
+            else if(warna === "red") msg.style.color = "#e74c3c";
+            else msg.style.color = "#f39c12";
         }
 
         window.onload = () => {
@@ -200,7 +240,6 @@
             }
         };
 
-        // 5. PENDAFTARAN SERVICE WORKER (PWA v3.22)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
