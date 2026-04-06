@@ -217,8 +217,9 @@
                 localStorage.setItem("inventorisda_email", email);
 
                 setTimeout(() => {
-                    window.location.href = URL_SISTEM;
-                }, 1000);
+                    setTimeout(() => {
+    window.location.href = URL_SISTEM + "?userEmail=" + encodeURIComponent(email);
+}, 1200);
             } else {
                 paparMesej("Emel tidak berdaftar. Hubungi Admin.", "red");
                 emailInput.focus();
