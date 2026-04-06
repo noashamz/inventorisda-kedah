@@ -217,9 +217,9 @@
                 localStorage.setItem("inventorisda_email", email);
 
                 setTimeout(() => {
-                    setTimeout(() => {
+    // Kita tambah ?userEmail= ke hujung URL supaya Apps Script boleh baca siapa yang masuk
     window.location.href = URL_SISTEM + "?userEmail=" + encodeURIComponent(email);
-}, 1200);
+}, 1000);
             } else {
                 paparMesej("Emel tidak berdaftar. Hubungi Admin.", "red");
                 emailInput.focus();
