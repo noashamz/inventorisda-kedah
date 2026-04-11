@@ -75,16 +75,21 @@
             // Simpan emel dalam memori telefon
             localStorage.setItem("inventorisda_email", email);
 
-            // Ubah butang kepada status memuatkan
-            document.getElementById('loginBtn').innerText = "Membuka sistem...";
-            document.getElementById('loginBtn').disabled = true;
+            // Ubah butang kepada status menyemak (supaya staf tahu sistem sedang berfikir)
+            let btn = document.getElementById('loginBtn');
+            btn.innerText = "Menyemak Identiti Google...";
+            btn.disabled = true;
             
-            // TIADA LAGI ANIMASI LENGAN: Terus tukar paparan serta merta!
-            document.getElementById('loginContainer').style.display = 'none';
             let frame = document.getElementById('appFrame');
-            frame.style.display = 'block';
+            // Kita hidupkan iframe tapi ia masih tersorok di belakang kad log masuk
+            frame.style.display = 'block'; 
             
-            // Tembak URL dengan identiti emel ke dalam Iframe
+            // KOD MAGIK: Bila Google DAH SIAP hasilkan skrin amaran/sistem, baru kita hilangkan kad depan!
+            frame.onload = function() {
+                document.getElementById('loginContainer').style.display = 'none';
+            };
+            
+            // Tembak URL (Proses Google mula berjalan secara rahsia)
             frame.src = URL_SISTEM + "?userEmail=" + encodeURIComponent(email);
         }
     </script>
