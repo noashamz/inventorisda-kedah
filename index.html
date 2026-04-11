@@ -13,16 +13,36 @@
         :root { --primary-color: #006837; --bg-gradient: linear-gradient(135deg, #e9ecef 0%, #cbd3da 100%); }
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg-gradient); overflow: hidden; }
         
-        /* GAYA GERBANG LOG MASUK */
-        #loginContainer { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: absolute; z-index: 10; background: var(--bg-gradient); transition: opacity 0.5s ease; }
-        .login-card { background: white; padding: 40px; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 85%; max-width: 400px; text-align: center; }
+        /* GAYA GERBANG LOG MASUK (DIBESARKAN UNTUK 2 KOLUM) */
+        #loginContainer { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: absolute; z-index: 10; background: var(--bg-gradient); }
+        
+        .login-card { background: white; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 90%; max-width: 850px; display: flex; overflow: hidden; flex-wrap: wrap; }
+        
+        /* KOLUM KIRI: BORANG LOG MASUK */
+        .login-form { flex: 1; padding: 40px; text-align: center; min-width: 300px; box-sizing: border-box; }
         .logo-img { width: 110px; margin-bottom: 20px; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); }
         input { width: 100%; padding: 18px; border: 2px solid #dfe6e9; border-radius: 16px; font-size: 16px; margin-bottom: 20px; box-sizing: border-box; text-align: center; font-weight: bold; }
         input:focus { border-color: var(--primary-color); outline: none; }
         button { width: 100%; padding: 18px; background: #006837; color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,104,55,0.3); }
         button:hover { background: #004d29; transform: translateY(-2px); }
         
-        /* GAYA IFRAME (Asalnya tersembunyi) */
+        /* KOLUM KANAN: PAPAN NOTIS */
+        .notice-board { flex: 1; background: #f8f9fa; padding: 40px; border-left: 2px dashed #dee2e6; min-width: 300px; box-sizing: border-box; position: relative; overflow: hidden; }
+        .notice-title { color: #006837; font-size: 22px; font-weight: 800; margin-top: 0; border-bottom: 3px solid #c6a355; padding-bottom: 10px; display: inline-block; margin-bottom: 20px; }
+        
+        /* ANIMASI TEKS BERGERAK (MARQUEE VERTIKAL) */
+        .scrolling-text { height: 250px; overflow: hidden; position: relative; }
+        .scrolling-content { animation: scrollUp 15s linear infinite; }
+        .scrolling-content:hover { animation-play-state: paused; /* Berhenti bila letak mouse */ }
+        
+        .notice-item { background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c6a355; margin-bottom: 15px; font-size: 14.5px; color: #495057; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; line-height: 1.5; }
+        .notice-date { font-size: 11px; color: #999; font-weight: bold; display: block; margin-bottom: 5px; }
+
+        @keyframes scrollUp {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
+        }
+        
         #appFrame { border: none; width: 100%; height: 100%; display: none; position: absolute; top: 0; left: 0; z-index: 5; }
     </style>
 </head>
@@ -30,66 +50,72 @@
 
     <div id="loginContainer">
         <div class="login-card">
-            <img src="https://i.ibb.co/3yrQJvX0/logo-risda-gold-emboss-removebg-preview.png" alt="RISDA" class="logo-img">
-            <h2 style="margin:0; color:#333;">InventoRISDA <span style="font-size:12px; background:#006837; color:white; padding:2px 8px; border-radius:10px; vertical-align: middle;">v3.22</span></h2>
-            <p style="color:#636e72; margin: 10px 0 30px; font-size: 14px;">Sistem Inventori Alat Tulis RISDA Kedah</p>
+            
+            <div class="login-form">
+                <img src="https://i.ibb.co/3yrQJvX0/logo-risda-gold-emboss-removebg-preview.png" alt="RISDA" class="logo-img">
+                <h2 style="margin:0; color:#333;">InventoRISDA <span style="font-size:12px; background:#006837; color:white; padding:2px 8px; border-radius:10px; vertical-align: middle;">v3.22</span></h2>
+                <p style="color:#636e72; margin: 10px 0 30px; font-size: 14px;">Sistem Inventori Alat Tulis RISDA Kedah</p>
 
-            <input type="email" id="emailInput" placeholder="Emel @risda.gov.my" inputmode="email">
-            <button id="loginBtn" onclick="masukSistem()">Log Masuk</button>
-            <div id="message" style="margin-top:20px; font-size:14px; font-weight:500; color:#666;">Sila masukkan emel rasmi anda.</div>
+                <input type="email" id="emailInput" placeholder="Emel @risda.gov.my" inputmode="email">
+                <button id="loginBtn" onclick="masukSistem()">Log Masuk</button>
+            </div>
+            
+            <div class="notice-board">
+                <h3 class="notice-title">📢 Pengumuman Semasa</h3>
+                <div class="scrolling-text">
+                    <div class="scrolling-content">
+                        <div class="notice-item">
+                            <span class="notice-date">11 APR 2026</span>
+                            Permohonan stok alat tulis bagi bulan April kini dibuka. Sila hantar permohonan selewat-lewatnya 25 haribulan.
+                        </div>
+                        <div class="notice-item">
+                            <span class="notice-date">05 APR 2026</span>
+                            <strong>Stok Terhad:</strong> Kertas A4 kuning buat masa ini sedang kehabisan stok. Penggantian warna akan dimaklumkan kelak.
+                        </div>
+                        <div class="notice-item">
+                            <span class="notice-date">INFO SISTEM</span>
+                            Sistem InventoRISDA v3.22 kini dikuasakan oleh Agen AI pintar. Anda boleh bertanya soalan di kotak sembang di dalam sistem!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <iframe id="appFrame" allow="geolocation; microphone; camera"></iframe>
 
     <script>
-        // URL WEB APP GAS ANDA
         const URL_SISTEM = "https://script.google.com/macros/s/AKfycbyetorELLyy_8C2cGJaRpp-WOCcbCZoGlZ4MUjWVSsmIrMsvjeV_Sv6xFJd7u4KUkze/exec";
 
         window.onload = () => {
-            // Logik cuci memori jika kembali dari ralat
             if (window.location.search.includes('refresh')) {
                 localStorage.removeItem("inventorisda_email");
                 document.getElementById('emailInput').value = "";
-                // Buang '?refresh=' dari URL supaya nampak bersih
                 window.history.replaceState({}, document.title, window.location.pathname);
             } else {
                 const savedEmail = localStorage.getItem("inventorisda_email");
                 if (savedEmail) document.getElementById('emailInput').value = savedEmail;
             }
-
-            // Aktifkan PWA
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA Error: ', err));
-            }
         };
 
         function masukSistem() {
             const email = document.getElementById('emailInput').value.toLowerCase().trim();
-            if (!email) {
-                document.getElementById('message').innerText = "Sila masukkan emel!";
-                document.getElementById('message').style.color = "red";
-                return;
-            }
+            if (!email) return alert("Sila masukkan emel!");
 
-            // Simpan emel dalam memori telefon
             localStorage.setItem("inventorisda_email", email);
 
-            // Ubah butang kepada status menyemak (supaya staf tahu sistem sedang berfikir)
             let btn = document.getElementById('loginBtn');
             btn.innerText = "Menyemak Identiti Google...";
             btn.disabled = true;
             
             let frame = document.getElementById('appFrame');
-            // Kita hidupkan iframe tapi ia masih tersorok di belakang kad log masuk
             frame.style.display = 'block'; 
             
-            // KOD MAGIK: Bila Google DAH SIAP hasilkan skrin amaran/sistem, baru kita hilangkan kad depan!
             frame.onload = function() {
                 document.getElementById('loginContainer').style.display = 'none';
             };
             
-            // Tembak URL (Proses Google mula berjalan secara rahsia)
             frame.src = URL_SISTEM + "?userEmail=" + encodeURIComponent(email);
         }
     </script>
