@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>InventoRISDA v3.22 | RISDA Kedah</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#006837">
+    
     <style>
-        /* Memastikan iframe memenuhi seluruh skrin tanpa margin */
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f4f7f6; }
         iframe { border: none; width: 100%; height: 100%; }
     </style>
@@ -16,14 +21,20 @@
     </iframe>
 
     <script>
-        // Logik tambahan untuk membuang memori ralat jika pengguna kembali melalui pautan refresh
+        // Cuci memori jika pengguna kembali selepas ralat
         window.onload = function() {
             if (window.location.search.includes('refresh')) {
-                // Memberitahu iframe untuk memuat semula secara bersih
                 var iframe = document.getElementsByTagName('iframe')[0];
                 iframe.src = iframe.src; 
             }
         };
+
+        // Aktifkan Service Worker (PWA)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            .then(function() { console.log('Aplikasi InventoRISDA sedia untuk di-install!'); })
+            .catch(function(err) { console.log('PWA Error: ', err); });
+        }
     </script>
 </body>
 </html>
