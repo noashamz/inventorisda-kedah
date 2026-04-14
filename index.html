@@ -10,38 +10,54 @@
     <meta name="theme-color" content="#006837">
     
     <style>
-        :root { --primary-color: #006837; --bg-gradient: linear-gradient(135deg, #e9ecef 0%, #cbd3da 100%); }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg-gradient); overflow: hidden; }
-        
-        #loginContainer { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: absolute; z-index: 10; background: var(--bg-gradient); }
-        
-        .login-card { background: white; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 90%; max-width: 850px; display: flex; overflow: hidden; flex-wrap: wrap; }
-        
-        .login-form { flex: 1; padding: 40px; text-align: center; min-width: 300px; box-sizing: border-box; }
-        .logo-img { width: 110px; margin-bottom: 20px; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); }
-        input { width: 100%; padding: 18px; border: 2px solid #dfe6e9; border-radius: 16px; font-size: 16px; margin-bottom: 20px; box-sizing: border-box; text-align: center; font-weight: bold; }
-        input:focus { border-color: var(--primary-color); outline: none; }
-        button { width: 100%; padding: 18px; background: #006837; color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,104,55,0.3); }
-        button:hover { background: #004d29; transform: translateY(-2px); }
-        button:disabled { background: #636e72; cursor: not-allowed; }
-        
-        .notice-board { flex: 1; background: #f8f9fa; padding: 40px; border-left: 2px dashed #dee2e6; min-width: 300px; box-sizing: border-box; position: relative; overflow: hidden; }
-        .notice-title { color: #006837; font-size: 22px; font-weight: 800; margin-top: 0; border-bottom: 3px solid #c6a355; padding-bottom: 10px; display: inline-block; margin-bottom: 20px; }
-        
-        .scrolling-text { height: 250px; overflow: hidden; position: relative; }
-        .scrolling-content { animation: scrollUp 15s linear infinite; }
-        .scrolling-content:hover { animation-play-state: paused; }
-        
-        .notice-item { background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c6a355; margin-bottom: 15px; font-size: 14.5px; color: #495057; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; line-height: 1.5; }
-        .notice-date { font-size: 11px; color: #999; font-weight: bold; display: block; margin-bottom: 5px; }
+  :root { --primary-color: #006837; --bg-gradient: linear-gradient(135deg, #e9ecef 0%, #cbd3da 100%); }
+  
+  /* 🟢 DIBETULKAN: Tukar overflow: hidden kepada overflow-y: auto supaya boleh skrol */
+  body, html { margin: 0; padding: 0; min-height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg-gradient); overflow-y: auto; }
 
-        @keyframes scrollUp {
-            0% { transform: translateY(100%); }
-            100% { transform: translateY(-100%); }
-        }
-        
-        #appFrame { border: none; width: 100%; height: 100%; display: none; position: absolute; top: 0; left: 0; z-index: 5; }
-    </style>
+  /* 🟢 DIBETULKAN: Padam position absolute, dan tambah padding supaya tak rapat ke skrin */
+  #loginContainer { display: flex; justify-content: center; align-items: center; min-height: 100vh; width: 100%; padding: 20px; box-sizing: border-box; background: var(--bg-gradient); }
+
+  .login-card { background: white; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 850px; display: flex; overflow: hidden; flex-wrap: wrap; }
+
+  .login-form { flex: 1; padding: 40px; text-align: center; min-width: 300px; box-sizing: border-box; }
+  .logo-img { width: 110px; margin-bottom: 20px; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); }
+  input { width: 100%; padding: 18px; border: 2px solid #dfe6e9; border-radius: 16px; font-size: 16px; margin-bottom: 20px; box-sizing: border-box; text-align: center; font-weight: bold; }
+  input:focus { border-color: var(--primary-color); outline: none; }
+  button { width: 100%; padding: 18px; background: #006837; color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,104,55,0.3); }
+  button:hover { background: #004d29; transform: translateY(-2px); }
+  button:disabled { background: #636e72; cursor: not-allowed; }
+
+  .notice-board { flex: 1; background: #f8f9fa; padding: 40px; border-left: 2px dashed #dee2e6; min-width: 300px; box-sizing: border-box; position: relative; overflow: hidden; }
+  .notice-title { color: #006837; font-size: 22px; font-weight: 800; margin-top: 0; border-bottom: 3px solid #c6a355; padding-bottom: 10px; display: inline-block; margin-bottom: 20px; }
+
+  .scrolling-text { height: 250px; overflow: hidden; position: relative; }
+  .scrolling-content { animation: scrollUp 15s linear infinite; }
+  .scrolling-content:hover { animation-play-state: paused; }
+
+  .notice-item { background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c6a355; margin-bottom: 15px; font-size: 14.5px; color: #495057; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; line-height: 1.5; }
+  .notice-date { font-size: 11px; color: #999; font-weight: bold; display: block; margin-bottom: 5px; }
+
+  @keyframes scrollUp {
+    0% { transform: translateY(100%); }
+    100% { transform: translateY(-100%); }
+  }
+
+  #appFrame { border: none; width: 100%; height: 100%; display: none; position: absolute; top: 0; left: 0; z-index: 5; }
+
+  /* 🟢 KOD BARU: Khas untuk Telefon Pintar (Mobile Responsive) */
+  @media (max-width: 768px) {
+    .login-form { padding: 30px 20px; }
+    .logo-img { width: 95px; margin-bottom: 10px; }
+    input, button { padding: 15px; font-size: 15px; margin-bottom: 15px; }
+    
+    /* Bila di telefon, border putus-putus pindah ke atas */
+    .notice-board { padding: 30px 20px; border-left: none; border-top: 2px dashed #dee2e6; } 
+    
+    /* Ruang pengumuman direndahkan sikit supaya tak terlalu panjang di skrin telefon */
+    .scrolling-text { height: 180px; } 
+  }
+</style>
 </head>
 <body>
 
