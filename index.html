@@ -59,20 +59,27 @@
         }
 
         .login-logo {
-            width: 120px;
+            width: 110px;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px rgba(198, 163, 85, 0.5));
+            /* Glow dibuang sepenuhnya untuk rupa yang lebih solid & bersih */
         }
 
         .login-card h2 {
             font-family: 'Orbitron', sans-serif;
             color: var(--neon-green);
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             letter-spacing: 2px;
+            line-height: 1.3;
+            font-size: 1.8rem;
         }
         
-        .login-card p { color: var(--risda-gold); font-size: 1.1rem; margin-bottom: 30px; letter-spacing: 1px; }
+        .login-card p { 
+            color: var(--risda-gold); 
+            font-size: 1.1rem; 
+            margin-bottom: 30px; 
+            letter-spacing: 1px; 
+        }
 
         .input-group-custom { margin-bottom: 25px; position: relative; }
         .input-group-custom i { position: absolute; left: 15px; top: 14px; color: var(--neon-green); }
@@ -109,7 +116,7 @@
 
         /* ----- SEKSYEN DASHBOARD ----- */
         #dashboard-section {
-            display: none; /* Sembunyi pada awal */
+            display: none; 
             flex: 1;
             flex-direction: column;
             opacity: 0;
@@ -185,7 +192,8 @@
     <div id="login-section">
         <div class="login-card">
             <img src="https://i.ibb.co/3yrQJvX0/logo-risda-gold-emboss-removebg-preview.png" alt="Logo RISDA" class="login-logo">
-            <h2>PORTAL KEDAH DI HATIKU</h2>
+            
+            <h2>PORTAL<br>KEDAH DI HATIKU</h2>
             <p>Pusat Digital RISDA Kedah</p>
             
             <form id="loginForm" onsubmit="event.preventDefault(); prosesLogin();">
@@ -201,7 +209,7 @@
     <div id="dashboard-section">
         <div class="portal-header">
             <div class="header-titles">
-                <h1>PORTAL KEDAH DI HATIKU</h1>
+                <h1>PORTAL RISDA KEDAH</h1>
             </div>
             <div class="user-info">
                 <div class="user-email" id="displayEmail">user@risda.gov.my</div>
@@ -241,13 +249,12 @@
     </div>
 
     <footer>
-        &copy; 2026 | INOVASI PENGURUSAN RISDA NEGERI KEDAH
+        HAK CIPTA TERPELIHARA &copy; 2026 | INOVASI PENGURUSAN RISDA KEDAH
     </footer>
 
     <script>
         // --- LOGIK PEMBEDAHAN PLASTIK (FRONTEND AUTHENTICATION) ---
         
-        // Periksa status log masuk apabila laman dibuka
         window.onload = function() {
             const savedEmail = localStorage.getItem("risdaPortalEmail");
             if (savedEmail) {
@@ -258,19 +265,13 @@
         function prosesLogin() {
             const email = document.getElementById('emailInput').value.toLowerCase().trim();
             
-            // Validasi mudah (Pastikan domain risda jika perlu)
             if (!email.includes('@')) {
                 Swal.fire({ icon: 'error', title: 'Ralat', text: 'Sila masukkan emel yang sah.', background: '#0a0f0d', color: '#fff' });
                 return;
             }
 
-            // Simpan sesi ke pelayar
             localStorage.setItem("risdaPortalEmail", email);
-            
-            // Bunyi efek (opsyenal)
             playFuturisticSuccess();
-
-            // Transisi ke Dashboard
             tunjukDashboard(email);
         }
 
@@ -284,10 +285,9 @@
             setTimeout(() => {
                 loginSec.style.display = 'none';
                 dashSec.style.display = 'flex';
-                // Trigger reflow
                 void dashSec.offsetWidth;
                 dashSec.style.opacity = '1';
-            }, 500); // Masa animasi pudar (fade)
+            }, 500); 
         }
 
         function prosesLogout() {
@@ -318,7 +318,6 @@
             });
         }
 
-        // Web Audio API untuk efek masuk
         function playFuturisticSuccess() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
