@@ -62,11 +62,16 @@
     perspective: 1000px;
 }
 
-        .login-logo {
-            width: 110px;
-            margin-bottom: 20px;
-            /* Glow dibuang sepenuhnya untuk rupa yang lebih solid & bersih */
-        }
+        /* Cari bahagian CSS ini dalam index.html */
+.login-logo {
+    width: 110px;
+    margin-bottom: 20px;
+    /* Glow dibuang sepenuhnya untuk rupa yang lebih solid & bersih */
+    
+    /* === TAMBAH BARIS-BARIS INI UNTUK ANIMASI === */
+    animation: putarY3D 6s linear infinite; /* Pusingan 3D pada paksi Y, tak terhingga */
+    transform-style: preserve-3d;     /* Pastikan logo dipaparkan dalam ruang 3D */
+}
 
         .login-card h2 {
             font-family: 'Orbitron', sans-serif;
@@ -207,6 +212,17 @@
             .header-left { flex-direction: column; }
             .header-right { flex-direction: column-reverse; gap: 15px; }
         }
+
+        /* === TAMBAH TAKRIFAN ANIMASI INI === */
+@keyframes putarY3D {
+    0% {
+        transform: rotateY(0deg); /* Kedudukan asal */
+    }
+    100% {
+        transform: rotateY(360deg); /* Pusingan lengkap 360 darjah */
+    }
+}
+        
     </style>
 </head>
 <body>
