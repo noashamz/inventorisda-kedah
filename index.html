@@ -388,26 +388,7 @@
             });
         }
 
-        function terimaJawapanGoogle(result) {
-    clearTimeout(window.jsonpTimeout); 
-    Swal.close(); 
-
-    // CETAK DATA FORENSIK KE KONSOL (Wajib semak di F12 > Console)
-    console.log("DATA FORENSIK PELAYAN:", result); 
-
-    if (result.status === "Sah") {
-        const email = document.getElementById('emailInput').value.toLowerCase().trim();
-        localStorage.setItem("risdaPortalEmail", email);
-        playFuturisticSuccess();
-        tunjukDashboard(email);
-    } else if (result.status === "Ralat") {
-        // Dedahkan ralat pelayan Google jika ada
-        Swal.fire({ icon: 'warning', title: 'Ralat Pelayan', text: result.mesej, background: '#0a0f0d', color: '#fff' });
-    } else {
-        Swal.fire({ icon: 'error', title: '🛑 AKSES DISEKAT', text: 'Maaf, e-mel rasmi anda tidak wujud dalam senarai kakitangan PRN Kedah.', background: '#0a0f0d', color: '#fff', confirmButtonColor: '#dc3545' });
-    }
-}
-
+        
         function playFuturisticSuccess() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
