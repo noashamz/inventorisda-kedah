@@ -372,6 +372,40 @@
                 osc.start(); osc.stop(ctx.currentTime + 0.4);
             } catch (e) {}
         }
+        
+        // 1. Matikan fungsi Klik Kanan (Context Menu)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 2. Matikan butang F12 dan kombinasi Keyboard (Inspect Element / View Source)
+        document.onkeydown = function(e) {
+            // Matikan butang F12
+            if (e.keyCode == 123) {
+                return false;
+            }
+            // Matikan Ctrl+Shift+I (Buka Developer Tools)
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            // Matikan Ctrl+Shift+C (Inspect Element Mode)
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                return false;
+            }
+            // Matikan Ctrl+Shift+J (Buka Console)
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            // Matikan Ctrl+U (View Page Source)
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
+        };
+
+        // 3. Pesanan "Menakutkan" di Developer Console (Jika mereka berjaya masuk juga)
+        console.log("%c🛑 AMARAN KESELAMATAN!", "color: red; font-size: 40px; font-weight: bold; text-shadow: 1px 1px 5px black;");
+        console.log("%cRuangan ini adalah kawasan larangan. Sebarang percubaan memanipulasi kod sistem ini sedang direkodkan oleh pelayan Pusat.", "color: #c6a355; font-size: 16px; font-family: monospace;");
+        
     </script>
 </body>
 </html>
