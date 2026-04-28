@@ -342,7 +342,7 @@
 
             // FORENSIK: Kita 'suntik' script tag ke dalam HTML untuk pintas sekatan CORS Google
             const script = document.createElement('script');
-            script.src = `${gasApiUrl}?email=${email}&callback=terimaJawapanGoogle`;
+            script.src = `${gasApiUrl}?email=${email}&callback=terimaJawapanGoogle&t=${new Date().getTime()}`;
             document.body.appendChild(script);
             
             // Perangkap ralat jika pelayan Google sangkut lebih 10 saat
@@ -352,27 +352,25 @@
             }, 10000);
         }
 
-        // ========================================================
-        // 2. FUNGSI UNTUK MENYAMBUT JAWAPAN DARI GOOGLE
-        // ========================================================
         function terimaJawapanGoogle(result) {
-            clearTimeout(window.jsonpTimeout); // Hentikan timer ralat
-            Swal.close(); // Tutup loading
+    clearTimeout(window.jsonpTimeout); 
+    Swal.close(); 
 
-            if (result.status === "Sah") {
-                const email = document.getElementById('emailInput').value.toLowerCase().trim();
-                localStorage.setItem("risdaPortalEmail", email);
-                playFuturisticSuccess();
-                tunjukDashboard(email);
-            } else {
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: '🛑 AKSES DISEKAT', 
-                    text: 'Maaf, e-mel rasmi anda tidak wujud dalam senarai kakitangan PRN Kedah.', 
-                    background: '#0a0f0d', color: '#fff', confirmButtonColor: '#dc3545'
-                });
-            }
-        }
+    // CETAK DATA FORENSIK KE KONSOL (Wajib semak di F12 > Console)
+    console.log("DATA FORENSIK PELAYAN:", result); 
+
+    if (result.status === "Sah") {
+        const email = document.getElementById('emailInput').value.toLowerCase().trim();
+        localStorage.setItem("risdaPortalEmail", email);
+        playFuturisticSuccess();
+        tunjukDashboard(email);
+    } else if (result.status === "Ralat") {
+        // Dedahkan ralat pelayan Google jika ada
+        Swal.fire({ icon: 'warning', title: 'Ralat Pelayan', text: result.mesej, background: '#0a0f0d', color: '#fff' });
+    } else {
+        Swal.fire({ icon: 'error', title: '🛑 AKSES DISEKAT', text: 'Maaf, e-mel rasmi anda tidak wujud dalam senarai kakitangan PRN Kedah.', background: '#0a0f0d', color: '#fff', confirmButtonColor: '#dc3545' });
+    }
+}
 
         function playFuturisticSuccess() {
             try {
