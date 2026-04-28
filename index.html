@@ -320,36 +320,72 @@
         };
 
         // ========================================================
-        // 1. FUNGSI LOGIN MENGGUNAKAN TAKTIK JSONP (BYPASS CORS)
+        // 1. SENARAI E-MEL KAKITANGAN RASMI (49 ORANG)
+        // ========================================================
+        const senaraiStafSah = [
+            "mohdrosli@risda.gov.my", "syahidah@risda.gov.my", "sayuthi@risda.gov.my", 
+            "mudirah@risda.gov.my", "zolkifli@risda.gov.my", "fatini.shahidan@risda.gov.my", 
+            "syahid.adil@risda.gov.my", "rodzi@risda.gov.my", "wan.maslina@risda.gov.my", 
+            "rohaizam@risda.gov.my", "husaini@risda.gov.my", "najmuddin@risda.gov.my", 
+            "mohamad_fahmi@risda.gov.my", "najib.hamdi@risda.gov.my", "m.zulhilmi@risda.gov.my", 
+            "noor_ajifuddin@risda.gov.my", "nor.fahmiza@risda.gov.my", "asyraf@risda.gov.my", 
+            "mohd.anas@risda.gov.my", "yusmiza.dahlan@risda.gov.my", "rohaida@risda.gov.my", 
+            "anwar@risda.gov.my", "n.azah@risda.gov.my", "norhasmiza@risda.gov.my", 
+            "marliana@risda.gov.my", "mohd.nazif@risda.gov.my", "yusaini@risda.gov.my", 
+            "n.shazliza@risda.gov.my", "anuar.aziz@risda.gov.my", "nuraina@risda.gov.my", 
+            "mohd.alif@risda.gov.my", "amirul.ashraf@risda.gov.my", "mohd.aiman@risda.gov.my", 
+            "nabila.hajar@risda.gov.my", "mohd.zuhairi@risda.gov.my", "firdaous@risda.gov.my", 
+            "izzatie@risda.gov.my", "m.basyiruddin@risda.gov.my", "hakim.yussoff@risda.gov.my", 
+            "taufik.zulkefli@risda.gov.my", "saerah@risda.gov.my", "romli@risda.gov.my", 
+            "mohd.hafis@risda.gov.my", "zaiful@risda.gov.my", "mohammad.fariq@risda.gov.my", 
+            "afiq.abdulrahman@risda.gov.my", "shahril.shahrom@risda.gov.my", "a.s.syahir@risda.gov.my", 
+            "saiful_asyraf@risda.gov.my"
+        ];
+
+        // ========================================================
+        // 2. FUNGSI LOGIN PANTAS (INSTANT VERIFICATION)
         // ========================================================
         function prosesLogin() {
             const email = document.getElementById('emailInput').value.toLowerCase().trim();
-            const gasApiUrl = "https://script.google.com/macros/s/AKfycbzE9EmyrfOxiYloLke70B91d2Xp0wzeVdCcv1sl5IQ-jIJ7jreeQTH-qAZm3XieGjOZhw/exec";
 
             if (!email.includes('@')) {
-                Swal.fire({ icon: 'error', title: 'Ralat', text: 'Sila masukkan emel yang sah.', background: '#0a0f0d', color: '#fff' });
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Format Ralat', 
+                    text: 'Sila masukkan alamat emel yang sah.', 
+                    background: '#0a0f0d', 
+                    color: '#fff' 
+                });
                 return;
             }
 
-            // Papar skrin loading
+            // Kesan Loading Futuristik (Hanya untuk gaya)
             Swal.fire({
                 title: 'MENGESAHKAN IDENTITI...',
-                html: 'Sila tunggu sebentar, sistem sedang menyemak pangkalan data pusat.',
-                background: '#0a0f0d', color: '#fff',
+                html: 'Sila tunggu, sistem sedang menyemak pangkalan data.',
+                background: '#0a0f0d', 
+                color: '#fff',
                 allowOutsideClick: false,
+                timer: 600, // Sangat pantas (0.6 saat)
                 didOpen: () => { Swal.showLoading(); }
+            }).then(() => {
+                
+                // SEMAKAN INSTANT: Tiada ralat rangkaian akan berlaku di sini
+                if (senaraiStafSah.includes(email)) {
+                    localStorage.setItem("risdaPortalEmail", email);
+                    playFuturisticSuccess(); // Bunyi Berjaya
+                    tunjukDashboard(email);  // Papar Dashboard
+                } else {
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: '🛑 AKSES DISEKAT', 
+                        text: 'Maaf, emel anda tidak berdaftar untuk akses Portal Kedah Di Hatiku.', 
+                        background: '#0a0f0d', 
+                        color: '#fff', 
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
             });
-
-            // FORENSIK: Kita 'suntik' script tag ke dalam HTML untuk pintas sekatan CORS Google
-            const script = document.createElement('script');
-            script.src = `${gasApiUrl}?email=${email}&callback=terimaJawapanGoogle&t=${new Date().getTime()}`;
-            document.body.appendChild(script);
-            
-            // Perangkap ralat jika pelayan Google sangkut lebih 10 saat
-            window.jsonpTimeout = setTimeout(() => {
-                Swal.close();
-                Swal.fire({ icon: 'warning', title: 'Ralat Rangkaian', text: 'Pelayan lambat membalas. Sila cuba lagi.', background: '#0a0f0d', color: '#fff' });
-            }, 10000);
         }
 
         function terimaJawapanGoogle(result) {
