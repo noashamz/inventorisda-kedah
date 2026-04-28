@@ -46,17 +46,21 @@
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .login-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(198, 163, 85, 0.3);
-            border-radius: 20px;
-            padding: 50px 40px;
-            text-align: center;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 40px rgba(0, 104, 55, 0.4);
-            width: 100%;
-            max-width: 450px;
-        }
+        /* Cari bahagian CSS ini dalam index.html */
+.login-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(198, 163, 85, 0.3);
+    border-radius: 20px;
+    padding: 50px 40px;
+    text-align: center;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 40px rgba(0, 104, 55, 0.4);
+    width: 100%;
+    max-width: 450px;
+    
+    /* === TAMBAH BARIS INI UNTUK KESAN 3D === */
+    perspective: 1000px;
+}
 
         .login-logo {
             width: 110px;
