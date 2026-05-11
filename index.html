@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
-        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://script.google.com https://script.googleusercontent.com;
         style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com;
         font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;
         img-src 'self' https://i.ibb.co data:;
-        connect-src 'self' https://script.google.com https://script.googleusercontent.com;
-        frame-ancestors 'none';
+        connect-src 'self' https://script.google.com https://script.googleusercontent.com https://cdn.jsdelivr.net;
     ">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
@@ -422,7 +421,7 @@ const CFG = Object.freeze({
     // ▸ Tukar kepada URL GAS Web App authenticator anda
     // ▸ GAS endpoint mesti menyemak emel dari spreadsheet (bukan hardcoded)
     // ▸ Lihat panduan di bawah fungsi ini
-    GAS_AUTH_URL: 'https://script.google.com/macros/s/AKfycbyMvbvX3EgfsQULHRgCGl1kpfxlDVtqSdQjaLnilSP5a4_V4U9zuKiBWmL4YfLdLeg/exec',
+    GAS_AUTH_URL: 'https://script.google.com/macros/s/AKfycbxNKqmmYc6cPcXQT_YHfi_LcdMkFZshmoleKjULiDUn5er5RwwcWeoUac3cOxlRpy1U/exec',
 
     MAX_ATTEMPTS:    5,          // Maksimum cubaan sebelum kunci
     LOCKOUT_MINUTES: 15,         // Tempoh kunci (minit)
@@ -857,6 +856,56 @@ console.log(
     'color: #c6a355; font-size: 14px; font-family: monospace;'
 );
 
+/*
+═══════════════════════════════════════════════════════════════════════════
+  PANDUAN PENYEDIAAN GAS AUTHENTICATOR
+  (Hantar kepada Developer / ICT RISDA Kedah)
+═══════════════════════════════════════════════════════════════════════════
+
+  1. Buka Google Apps Script: https://script.google.com
+  2. Buat projek baru, tampal kod berikut:
+
+  ┌─────────────────────────────────────────────────────────────────────
+  │ const SHEET_ID = 'ID_SPREADSHEET_SENARAI_EMEL_KAKITANGAN';
+  │
+  │ function doGet(e) {
+  │   const action = e.parameter.action;
+  │   const token  = e.parameter.token; // SHA-256 hash emel
+  │
+  │   if (action !== 'authenticate' || !token) {
+  │     return jsonResp({ status: 'ERROR', msg: 'Parameter tidak sah' });
+  │   }
+  │
+  │   const sheet = SpreadsheetApp.openById(SHEET_ID)
+  │                               .getSheetByName('Kakitangan');
+  │   const data  = sheet.getRange('A2:C').getValues(); // [emel, nama, hash]
+  │
+  │   for (const row of data) {
+  │     if (!row[2]) continue; // hash kosong
+  │     if (row[2].toString().toLowerCase() === token.toLowerCase()) {
+  │       return jsonResp({ status: 'OK', authorised: true, nama: row[1] });
+  │     }
+  │   }
+  │
+  │   return jsonResp({ status: 'OK', authorised: false });
+  │ }
+  │
+  │ function jsonResp(obj) {
+  │   return ContentService
+  │     .createTextOutput(JSON.stringify(obj))
+  │     .setMimeType(ContentService.MimeType.JSON);
+  │ }
+  └─────────────────────────────────────────────────────────────────────
+
+  3. Deploy sebagai Web App:
+     → Execute as: Me
+     → Who has access: Anyone (dengan domain risda.gov.my jika boleh)
+  4. Salin URL deployment, gantikan nilai CFG.GAS_AUTH_URL di atas.
+  5. Dalam Spreadsheet, tambah lajur C = SHA-256 hash setiap emel.
+     (Gunakan =ARRAYFORMULA untuk jana hash, atau skrip GAS sekali.)
+
+═══════════════════════════════════════════════════════════════════════════
+*/
 </script>
 </body>
 </html>
