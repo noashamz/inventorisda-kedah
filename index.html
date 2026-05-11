@@ -3,6 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+        img-src 'self' https://i.ibb.co data:;
+        connect-src 'self' https://script.google.com https://script.googleusercontent.com;
+        frame-ancestors 'none';
+    ">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta name="robots" content="noindex, nofollow">
     <title>Portal Kedah Di Hatiku</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,17 +40,17 @@
             margin: 0;
         }
 
-        /* Latar Belakang Animasi */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+            background-image:
+                linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
             background-size: 50px 50px;
             z-index: -1;
         }
 
-        /* ----- SEKSYEN LOG MASUK ----- */
+        /* ── LOGIN ── */
         #login-section {
             flex: 1;
             display: flex;
@@ -47,23 +60,22 @@
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(198, 163, 85, 0.3);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(198,163,85,0.3);
             border-radius: 20px;
             padding: 50px 40px;
             text-align: center;
             backdrop-filter: blur(15px);
-            box-shadow: 0 0 40px rgba(0, 104, 55, 0.4);
+            box-shadow: 0 0 40px rgba(0,104,55,0.4);
             width: 100%;
             max-width: 450px;
-            perspective: 1000px;
         }
 
         .login-logo {
             width: 110px;
             margin-bottom: 20px;
-            animation: putarY3D 6s linear infinite; 
-            transform-style: preserve-3d;     
+            animation: putarY3D 6s linear infinite;
+            transform-style: preserve-3d;
         }
 
         .login-card h2 {
@@ -75,30 +87,53 @@
             line-height: 1.3;
             font-size: 1.8rem;
         }
-        
-        .login-card p { 
-            color: var(--risda-gold); 
-            font-size: 1.1rem; 
-            margin-bottom: 30px; 
-            letter-spacing: 1px; 
+
+        .login-card p {
+            color: var(--risda-gold);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
 
-        .input-group-custom { margin-bottom: 25px; position: relative; }
-        .input-group-custom i { position: absolute; left: 15px; top: 14px; color: var(--neon-green); }
+        .input-group-custom { margin-bottom: 20px; position: relative; }
+        .input-group-custom i { position: absolute; left: 15px; top: 14px; color: var(--neon-green); z-index: 1; }
         .form-control-custom {
             width: 100%;
             padding: 12px 15px 12px 45px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(0, 255, 136, 0.3);
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(0,255,136,0.3);
             border-radius: 8px;
             color: white;
             font-size: 1.1rem;
             outline: none;
             transition: 0.3s;
+            font-family: 'Rajdhani', sans-serif;
         }
         .form-control-custom:focus {
             border-color: var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 15px rgba(0,255,136,0.3);
+        }
+        .form-control-custom::placeholder { color: rgba(255,255,255,0.35); }
+
+        /* Rate-limit indicator */
+        .attempt-warning {
+            font-size: 0.85rem;
+            color: #ff9944;
+            margin-bottom: 12px;
+            min-height: 20px;
+            transition: opacity 0.3s;
+        }
+
+        /* Session timer */
+        .session-badge {
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
         }
 
         .btn-login {
@@ -114,11 +149,19 @@
             transition: 0.3s;
             font-family: 'Orbitron', sans-serif;
         }
-        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4); }
+        .btn-login:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,255,136,0.4);
+        }
+        .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-        /* ----- SEKSYEN DASHBOARD ----- */
+        /* ── DASHBOARD ── */
         #dashboard-section {
-            display: none; 
+            display: none;
             flex: 1;
             flex-direction: column;
             opacity: 0;
@@ -126,39 +169,38 @@
         }
 
         .portal-header {
-            padding: 20px 30px; 
+            padding: 20px 30px;
             border-bottom: 2px solid var(--risda-gold);
-            background: rgba(0, 104, 55, 0.2);
+            background: rgba(0,104,55,0.2);
             backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
         .header-logo-risda { height: 45px; }
         .header-titles h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.6rem;
             font-weight: 700;
             color: var(--neon-green);
-            margin: 0; letter-spacing: 2px;
+            margin: 0;
+            letter-spacing: 2px;
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
+        .header-right { display: flex; align-items: center; gap: 25px; }
         .user-info { display: flex; align-items: center; gap: 15px; }
         .user-email { color: var(--risda-gold); font-size: 1.1rem; }
+
         .btn-logout {
-            background: transparent; border: 1px solid #dc3545; color: #dc3545;
-            padding: 5px 15px; border-radius: 5px; cursor: pointer; transition: 0.3s;
+            background: transparent;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
         }
         .btn-logout:hover { background: #dc3545; color: white; }
         .header-logo-hpc { height: 38px; }
@@ -166,12 +208,12 @@
         .dashboard-content { flex: 1; padding: 50px 20px; }
 
         .app-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(198, 163, 85, 0.2);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(198,163,85,0.2);
             border-radius: 15px;
             padding: 35px 25px;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
             cursor: pointer;
             text-decoration: none;
             display: block;
@@ -182,16 +224,22 @@
         .app-card:hover {
             transform: translateY(-10px);
             border-color: var(--neon-green);
-            background: rgba(0, 255, 136, 0.05);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.15);
+            background: rgba(0,255,136,0.05);
+            box-shadow: 0 10px 30px rgba(0,255,136,0.15);
         }
         .icon-box { font-size: 3.5rem; color: var(--risda-gold); margin-bottom: 20px; transition: 0.3s; }
         .app-card:hover .icon-box { color: var(--neon-green); transform: scale(1.1); }
         .app-title { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: white; margin-bottom: 10px; }
         .app-desc { font-size: 0.95rem; color: #aaa; line-height: 1.5; }
 
-        footer { text-align: center; padding: 15px; background: rgba(0,0,0,0.6); color: #666; font-size: 0.85rem; }
-        
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.6);
+            color: #666;
+            font-size: 0.85rem;
+        }
+
         @media (max-width: 768px) {
             .portal-header { flex-direction: column; text-align: center; gap: 20px; }
             .header-left { flex-direction: column; }
@@ -202,233 +250,601 @@
             0% { transform: rotateY(0deg); }
             100% { transform: rotateY(360deg); }
         }
+
+        /* Lockout overlay */
+        .lockout-overlay {
+            position: fixed; inset: 0;
+            background: rgba(10,15,13,0.97);
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 20px;
+        }
+        .lockout-overlay h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #dc3545;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        .lockout-timer {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--risda-gold);
+        }
+        .lockout-overlay p {
+            color: #aaa; max-width: 380px; text-align: center; line-height: 1.6;
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
+<div class="bg-grid"></div>
 
-    <div id="login-section">
-        <div class="login-card">
-            <img src="https://i.ibb.co/3yrQJvX0/logo-risda-gold-emboss-removebg-preview.png" alt="Logo RISDA" class="login-logo">
-            
-            <h2>PORTAL<br>KEDAH DI HATIKU</h2>
-            <p>Pusat Digital RISDA Kedah</p>
-            
-            <form id="loginForm" onsubmit="event.preventDefault(); prosesLogin();">
-                <div class="input-group-custom">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="emailInput" class="form-control-custom" placeholder="Emel @risda.gov.my" required>
-                </div>
-                <button type="submit" class="btn-login"><i class="fas fa-power-off me-2"></i>Akses Portal</button>
-            </form>
+<!-- ══════════════════════════════
+     SEKSYEN LOG MASUK
+════════════════════════════════ -->
+<div id="login-section">
+    <div class="login-card">
+        <img src="https://i.ibb.co/3yrQJvX0/logo-risda-gold-emboss-removebg-preview.png"
+             alt="Logo RISDA"
+             class="login-logo"
+             draggable="false">
+
+        <h2>PORTAL<br>KEDAH DI HATIKU</h2>
+        <p>Pusat Digital RISDA Kedah</p>
+
+        <div class="attempt-warning" id="attemptWarning" aria-live="polite"></div>
+
+        <form id="loginForm" autocomplete="off" novalidate>
+            <div class="input-group-custom">
+                <i class="fas fa-envelope" aria-hidden="true"></i>
+                <input type="email"
+                       id="emailInput"
+                       class="form-control-custom"
+                       placeholder="Emel @risda.gov.my"
+                       autocomplete="email"
+                       spellcheck="false"
+                       maxlength="100"
+                       required
+                       aria-label="Alamat emel RISDA">
+            </div>
+            <button type="submit" class="btn-login" id="loginBtn">
+                <i class="fas fa-power-off me-2" aria-hidden="true"></i>Akses Portal
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- ══════════════════════════════
+     SEKSYEN DASHBOARD
+════════════════════════════════ -->
+<div id="dashboard-section">
+    <div class="portal-header">
+        <div class="header-left">
+            <img src="https://i.ibb.co/3yrQJvX0/logo-risda-gold-emboss-removebg-preview.png"
+                 alt="Logo RISDA"
+                 class="header-logo-risda"
+                 draggable="false">
+            <div class="header-titles">
+                <h1>PORTAL KEDAH DI HATIKU</h1>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <span class="session-badge" id="sessionTimer" aria-label="Masa sesi aktif">
+                    <i class="fas fa-clock me-1" aria-hidden="true"></i>
+                    <span id="timerDisplay">30:00</span>
+                </span>
+                <div class="user-email" id="displayEmail" aria-label="Emel pengguna semasa"></div>
+                <button class="btn-logout" onclick="prosesLogout()" title="Log Keluar" aria-label="Log keluar dari portal">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                </button>
+            </div>
+            <img src="https://i.ibb.co/67t3m1q3/HPC-high-res.png"
+                 alt="Logo HPC"
+                 class="header-logo-hpc d-none d-md-block"
+                 draggable="false">
         </div>
     </div>
 
-    <div id="dashboard-section">
-        <div class="portal-header">
-            
-            <div class="header-left">
-                <img src="https://i.ibb.co/3yrQJvX0/logo-risda-gold-emboss-removebg-preview.png" alt="Logo RISDA" class="header-logo-risda">
-                <div class="header-titles">
-                    <h1>PORTAL KEDAH DI HATIKU</h1>
-                </div>
+    <div class="dashboard-content container">
+        <div class="row g-4 justify-content-center">
+
+            <div class="col-md-12 mb-2">
+                <a href="https://sites.google.com/view/portalkedahdihatiku/laman-utama"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="app-card"
+                   style="background: rgba(198,163,85,0.08); border: 2px solid var(--risda-gold);"
+                   aria-label="Laman Utama Portal RISDA Kedah">
+                    <div class="icon-box" style="font-size: 4rem; color: var(--risda-gold);">
+                        <i class="fas fa-globe-asia" aria-hidden="true"></i>
+                    </div>
+                    <div class="app-title" style="font-size: 1.8rem; color: var(--risda-gold);">LAMAN UTAMA PORTAL</div>
+                    <div class="app-desc" style="font-size: 1.1rem; color: #ddd;">
+                        Pusat Sehenti Digital Rasmi Pejabat RISDA Negeri Kedah. Klik di sini untuk masuk ke laman utama.
+                    </div>
+                </a>
             </div>
 
-            <div class="header-right">
-                <div class="user-info">
-                    <div class="user-email" id="displayEmail">user@risda.gov.my</div>
-                    <button class="btn-logout" onclick="prosesLogout()" title="Log Keluar"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
-                <img src="https://i.ibb.co/67t3m1q3/HPC-high-res.png" alt="Logo HPC" class="header-logo-hpc d-none d-md-block">
+            <div class="col-md-4">
+                <a href="https://script.google.com/a/macros/risda.gov.my/s/AKfycbyetorELLyy_8C2cGJaRpp-WOCcbCZoGlZ4MUjWVSsmIrMsvjeV_Sv6xFJd7u4KUkze/exec"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="app-card"
+                   aria-label="inventoRISDA - Sistem pengurusan inventori">
+                    <div class="icon-box"><i class="fas fa-boxes-stacked" aria-hidden="true"></i></div>
+                    <div class="app-title">inventoRISDA</div>
+                    <div class="app-desc">Sistem pengurusan inventori alat tulis berpusat.</div>
+                </a>
             </div>
 
-        </div>
-
-        <div class="dashboard-content container">
-            <div class="row g-4 justify-content-center">
-                
-                <div class="col-md-12 mb-2">
-                    <a href="https://sites.google.com/view/portalkedahdihatiku/laman-utama" target="_blank" class="app-card" style="background: rgba(198, 163, 85, 0.08); border: 2px solid var(--risda-gold);">
-                        <div class="icon-box" style="font-size: 4rem; color: var(--risda-gold);"><i class="fas fa-globe-asia"></i></div>
-                        <div class="app-title" style="font-size: 1.8rem; color: var(--risda-gold);">LAMAN UTAMA PORTAL</div>
-                        <div class="app-desc" style="font-size: 1.1rem; color: #ddd;">Pusat Sehenti Digital Rasmi Pejabat RISDA Negeri Kedah. Klik di sini untuk masuk ke laman utama.</div>
-                    </a>
-                </div>
-
-                <div class="col-md-4">
-                    <a href="https://script.google.com/a/macros/risda.gov.my/s/AKfycbyetorELLyy_8C2cGJaRpp-WOCcbCZoGlZ4MUjWVSsmIrMsvjeV_Sv6xFJd7u4KUkze/exec" target="_blank" class="app-card">
-                        <div class="icon-box"><i class="fas fa-boxes-stacked"></i></div>
-                        <div class="app-title">inventoRISDA</div>
-                        <div class="app-desc">Sistem pengurusan inventori alat tulis berpusat.</div>
-                    </a>
-                </div>
-
-                <div class="col-md-4">
-                    <a href="https://script.google.com/a/macros/risda.gov.my/s/AKfycbwny34mJW9kH5uZtgnCj8PND25JGZt6sOpgb_-MC_6g-63U1Sc_80eajRNYJX_KjQ8U1A/exec" target="_blank" class="app-card">
-                        <div class="icon-box"><i class="fas fa-building"></i></div>
-                        <div class="app-title">e-Fasiliti</div>
-                        <div class="app-desc">Tempahan ruang fasiliti dan kenderaan rasmi Pejabat RISDA Negeri Kedah.</div>
-                    </a>
-                </div>
-
-                <div class="col-md-4">
-                    <a href="https://script.google.com/macros/s/AKfycby77_2nX5PwbT10dYmkEwdEnxim3UTE1YuttL4D5K_VWCEJ6wCpa0tjeWvie6H7D5sp/exec" target="_blank" class="app-card">
-                        <div class="icon-box"><i class="fas fa-file-signature"></i></div>
-                        <div class="app-title">Dashboard CORE</div>
-                        <div class="app-desc">Automasi permohonan EPSA dan janaan PDF ULS01 serta KPI CORE pegawai.</div>
-                    </a>
-                </div>
-
+            <div class="col-md-4">
+                <a href="https://script.google.com/a/macros/risda.gov.my/s/AKfycbwny34mJW9kH5uZtgnCj8PND25JGZt6sOpgb_-MC_6g-63U1Sc_80eajRNYJX_KjQ8U1A/exec"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="app-card"
+                   aria-label="e-Fasiliti - Tempahan ruang dan kenderaan">
+                    <div class="icon-box"><i class="fas fa-building" aria-hidden="true"></i></div>
+                    <div class="app-title">e-Fasiliti</div>
+                    <div class="app-desc">Tempahan ruang fasiliti dan kenderaan rasmi Pejabat RISDA Negeri Kedah.</div>
+                </a>
             </div>
+
+            <div class="col-md-4">
+                <a href="https://script.google.com/macros/s/AKfycby77_2nX5PwbT10dYmkEwdEnxim3UTE1YuttL4D5K_VWCEJ6wCpa0tjeWvie6H7D5sp/exec"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="app-card"
+                   aria-label="Dashboard CORE - Automasi EPSA dan KPI">
+                    <div class="icon-box"><i class="fas fa-file-signature" aria-hidden="true"></i></div>
+                    <div class="app-title">Dashboard CORE</div>
+                    <div class="app-desc">Automasi permohonan EPSA dan janaan PDF ULS01 serta KPI CORE pegawai.</div>
+                </a>
+            </div>
+
         </div>
     </div>
+</div>
 
-    <footer>
-        HAK CIPTA TERPELIHARA &copy; 2026 | INOVASI PENGURUSAN RISDA KEDAH
-    </footer>
+<footer>
+    HAK CIPTA TERPELIHARA &copy; 2026 | INOVASI PENGURUSAN RISDA KEDAH
+</footer>
 
-    <script>
-        window.onload = function() {
-            const savedEmail = localStorage.getItem("risdaPortalEmail");
-            if (savedEmail) {
-                tunjukDashboard(savedEmail);
-            }
-        };
+<script>
+'use strict';
 
-        // ========================================================
-        // 1. SENARAI E-MEL KAKITANGAN RASMI (49 ORANG HARDCODED)
-        // ========================================================
-        const senaraiStafSah = [
-            "mohdrosli@risda.gov.my", "syahidah@risda.gov.my", "sayuthi@risda.gov.my", 
-            "mudirah@risda.gov.my", "zolkifli@risda.gov.my", "fatini.shahidan@risda.gov.my", 
-            "syahid.adil@risda.gov.my", "rodzi@risda.gov.my", "wan.maslina@risda.gov.my", 
-            "rohaizam@risda.gov.my", "husaini@risda.gov.my", "najmuddin@risda.gov.my", 
-            "mohamad_fahmi@risda.gov.my", "najib.hamdi@risda.gov.my", "m.zulhilmi@risda.gov.my", 
-            "noor_ajifuddin@risda.gov.my", "nor.fahmiza@risda.gov.my", "asyraf@risda.gov.my", 
-            "mohd.anas@risda.gov.my", "yusmiza.dahlan@risda.gov.my", "rohaida@risda.gov.my", 
-            "anwar@risda.gov.my", "n.azah@risda.gov.my", "norhasmiza@risda.gov.my", 
-            "marliana@risda.gov.my", "mohd.nazif@risda.gov.my", "yusaini@risda.gov.my", 
-            "n.shazliza@risda.gov.my", "anuar.aziz@risda.gov.my", "nuraina@risda.gov.my", 
-            "mohd.alif@risda.gov.my", "amirul.ashraf@risda.gov.my", "mohd.aiman@risda.gov.my", 
-            "nabila.hajar@risda.gov.my", "mohd.zuhairi@risda.gov.my", "firdaous@risda.gov.my", 
-            "izzatie@risda.gov.my", "m.basyiruddin@risda.gov.my", "hakim.yussoff@risda.gov.my", 
-            "taufik.zulkefli@risda.gov.my", "saerah@risda.gov.my", "romli@risda.gov.my", 
-            "mohd.hafis@risda.gov.my", "zaiful@risda.gov.my", "mohammad.fariq@risda.gov.my", 
-            "afiq.abdulrahman@risda.gov.my", "shahril.shahrom@risda.gov.my", "a.s.syahir@risda.gov.my", 
-            "saiful_asyraf@risda.gov.my"
-        ];
+// ══════════════════════════════════════════════════════════════════════
+// KONFIGURASI KESELAMATAN
+// ══════════════════════════════════════════════════════════════════════
+const CFG = Object.freeze({
+    // ▸ Tukar kepada URL GAS Web App authenticator anda
+    // ▸ GAS endpoint mesti menyemak emel dari spreadsheet (bukan hardcoded)
+    // ▸ Lihat panduan di bawah fungsi ini
+    GAS_AUTH_URL: 'https://script.google.com/macros/s/AKfycbzQrq0BBqlBNP_YQxfZFArD6Baf-fCmTMnFFnX-sBXUkhZ-m8SzLRDTNos7MUX8a-f7/exec',
 
-        // ========================================================
-        // 2. FUNGSI LOGIN PANTAS (INSTANT VERIFICATION)
-        // ========================================================
-        function prosesLogin() {
-            const email = document.getElementById('emailInput').value.toLowerCase().trim();
+    MAX_ATTEMPTS:    5,          // Maksimum cubaan sebelum kunci
+    LOCKOUT_MINUTES: 15,         // Tempoh kunci (minit)
+    SESSION_MINUTES: 30,         // Tempoh sesi aktif (minit)
+    STORAGE_KEY:     'kdh_sess', // Kunci sessionStorage (bukan localStorage)
+    LOCKOUT_KEY:     'kdh_lock', // Kunci lockout
+    DOMAIN_SUFFIX:   '@risda.gov.my',
+});
 
-            if (!email.includes('@')) {
-                Swal.fire({ 
-                    icon: 'error', title: 'Format Ralat', text: 'Sila masukkan alamat emel yang sah.', 
-                    background: '#0a0f0d', color: '#fff' 
-                });
-                return;
-            }
+// ══════════════════════════════════════════════════════════════════════
+// PENGURUSAN CUBAAN & LOCKOUT (in-memory + sessionStorage)
+// ══════════════════════════════════════════════════════════════════════
+let attemptCount   = 0;
+let sessionTimer   = null;
+let sessionExpiry  = null;
 
-            Swal.fire({
-                title: 'MENGESAHKAN IDENTITI...',
-                html: 'Sila tunggu, sistem sedang menyemak pangkalan data.',
-                background: '#0a0f0d', color: '#fff',
-                allowOutsideClick: false,
-                timer: 600, 
-                didOpen: () => { Swal.showLoading(); }
-            }).then(() => {
-                
-                if (senaraiStafSah.includes(email)) {
-                    localStorage.setItem("risdaPortalEmail", email);
-                    playFuturisticSuccess(); 
-                    tunjukDashboard(email);  
-                } else {
-                    Swal.fire({ 
-                        icon: 'error', title: '🛑 AKSES DISEKAT', 
-                        text: 'Maaf, emel anda tidak berdaftar untuk akses Portal Kedah Di Hatiku.', 
-                        background: '#0a0f0d', color: '#fff', confirmButtonColor: '#dc3545'
-                    });
-                }
-            });
+function bacaLockout() {
+    try {
+        const raw = sessionStorage.getItem(CFG.LOCKOUT_KEY);
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        if (Date.now() > obj.until) {
+            sessionStorage.removeItem(CFG.LOCKOUT_KEY);
+            return null;
+        }
+        return obj;
+    } catch { return null; }
+}
+
+function tetapkanLockout() {
+    const until = Date.now() + CFG.LOCKOUT_MINUTES * 60_000;
+    sessionStorage.setItem(CFG.LOCKOUT_KEY, JSON.stringify({ until }));
+    paparkanLockout(until);
+}
+
+function paparkanLockout(until) {
+    const overlay = document.createElement('div');
+    overlay.className = 'lockout-overlay';
+    overlay.id = 'lockoutOverlay';
+    overlay.setAttribute('role', 'alert');
+    overlay.innerHTML = `
+        <i class="fas fa-shield-alt" style="font-size:4rem;color:#dc3545;" aria-hidden="true"></i>
+        <h2>🛑 AKAUN DIKUNCI SEMENTARA</h2>
+        <div class="lockout-timer" id="lockCountdown" aria-live="polite">--:--</div>
+        <p>Terlalu banyak cubaan akses gagal dikesan. Portal dikunci buat sementara waktu atas sebab keselamatan.</p>
+        <p style="font-size:0.85rem;color:#666;">Hubungi pentadbir ICT jika anda memerlukan bantuan segera.</p>
+    `;
+    document.body.appendChild(overlay);
+    kiraturunLockout(until, overlay);
+}
+
+function kiraturunLockout(until, overlay) {
+    const tick = () => {
+        const baki = Math.max(0, until - Date.now());
+        const m    = String(Math.floor(baki / 60_000)).padStart(2, '0');
+        const s    = String(Math.floor((baki % 60_000) / 1000)).padStart(2, '0');
+        const el   = document.getElementById('lockCountdown');
+        if (el) el.textContent = `${m}:${s}`;
+        if (baki <= 0) {
+            overlay.remove();
+            sessionStorage.removeItem(CFG.LOCKOUT_KEY);
+            attemptCount = 0;
+            kemaskinWarning();
+        } else {
+            setTimeout(tick, 1000);
+        }
+    };
+    tick();
+}
+
+function kemaskinWarning() {
+    const el = document.getElementById('attemptWarning');
+    if (!el) return;
+    const baki = CFG.MAX_ATTEMPTS - attemptCount;
+    el.textContent = attemptCount > 0
+        ? `⚠ ${baki} cubaan lagi sebelum portal dikunci (${CFG.LOCKOUT_MINUTES} minit)`
+        : '';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PENGESAHAN EMEL ASAS (client-side pre-filter sahaja)
+// ══════════════════════════════════════════════════════════════════════
+function sahkanFormatEmel(emel) {
+    if (!emel || typeof emel !== 'string') return false;
+    if (emel.length > 100) return false;
+    // Mesti domain @risda.gov.my
+    const pola = /^[a-z0-9][a-z0-9._-]{0,62}@risda\.gov\.my$/i;
+    return pola.test(emel);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PROSES LOG MASUK — memanggil GAS Web App sebagai authenticator
+// ══════════════════════════════════════════════════════════════════════
+async function prosesLogin(e) {
+    e.preventDefault();
+
+    // Semak lockout
+    const kunci = bacaLockout();
+    if (kunci) { paparkanLockout(kunci.until); return; }
+
+    const emailInput = document.getElementById('emailInput');
+    const loginBtn   = document.getElementById('loginBtn');
+    const emel       = emailInput.value.toLowerCase().trim();
+
+    // Pre-filter format
+    if (!sahkanFormatEmel(emel)) {
+        Swal.fire({
+            icon: 'warning', title: 'Format Emel Tidak Sah',
+            text: `Sila masukkan emel rasmi anda (contoh: nama@risda.gov.my)`,
+            background: '#0a0f0d', color: '#fff'
+        });
+        return;
+    }
+
+    // Kira cubaan
+    attemptCount++;
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengesahkan...';
+
+    // Tunjukkan loading
+    Swal.fire({
+        title: 'MENGESAHKAN IDENTITI...',
+        html: 'Sistem sedang menyemak kelayakan anda.',
+        background: '#0a0f0d', color: '#fff',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    try {
+        // ── Panggil GAS Web App untuk pengesahan sebenar ──
+        // GAS Web App akan semak spreadsheet / database emel rasmi
+        const url = new URL(CFG.GAS_AUTH_URL);
+        url.searchParams.set('action', 'authenticate');
+        // Hash emel sebelum hantar (privasi tambahan)
+        url.searchParams.set('token', await hashEmel(emel));
+        url.searchParams.set('ts', Date.now()); // Cache-busting
+
+        const resp = await fetch(url.toString(), {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+            signal: AbortSignal.timeout(10_000) // 10 saat timeout
+        });
+
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+        const data = await resp.json();
+
+        if (data && data.status === 'OK' && data.authorised === true) {
+            // ── Berjaya ──
+            attemptCount = 0;
+            simpanSesi(emel, data.nama || emel.split('@')[0]);
+            Swal.close();
+            mainkanBunyi();
+            tunjukDashboard(emel, data.nama);
+        } else {
+            // ── Gagal ──
+            tanganiGagal(emel);
         }
 
-        function tunjukDashboard(email) {
-            document.getElementById('displayEmail').innerText = email;
-            const loginSec = document.getElementById('login-section');
-            const dashSec = document.getElementById('dashboard-section');
+    } catch (err) {
+        console.warn('[Portal] Auth request gagal:', err.message);
 
-            loginSec.style.opacity = '0';
-            setTimeout(() => {
-                loginSec.style.display = 'none';
-                dashSec.style.display = 'flex';
-                void dashSec.offsetWidth;
-                dashSec.style.opacity = '1';
-            }, 500); 
+        // ── FALLBACK: jika GAS URL belum dikonfigurasi, gunakan mod demo ──
+        // PADAMKAN blok ini apabila GAS URL sebenar sudah dikonfigurasi
+        if (CFG.GAS_AUTH_URL.includes('GANTIKAN_DENGAN_ID')) {
+            modDemo(emel);
+            return;
         }
 
-        function prosesLogout() {
-            Swal.fire({
-                title: 'Log Keluar Portal?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc3545',
-                cancelButtonColor: '#333',
-                confirmButtonText: 'Ya',
-                cancelButtonText: 'Batal',
-                background: '#0a0f0d', color: '#fff'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    localStorage.removeItem("risdaPortalEmail");
-                    document.getElementById('emailInput').value = '';
-                    
-                    const loginSec = document.getElementById('login-section');
-                    const dashSec = document.getElementById('dashboard-section');
+        Swal.fire({
+            icon: 'error', title: 'Ralat Sambungan',
+            text: 'Tidak dapat menghubungi pelayan pengesahan. Cuba sebentar lagi.',
+            background: '#0a0f0d', color: '#fff'
+        });
+        resetBtn();
+    }
+}
 
-                    dashSec.style.opacity = '0';
-                    setTimeout(() => {
-                        dashSec.style.display = 'none';
-                        loginSec.style.display = 'flex';
-                        void loginSec.offsetWidth;
-                        loginSec.style.opacity = '1';
-                    }, 500);
-                }
-            });
+// ── Mod Demo (padam bila GAS URL sudah siap) ──
+function modDemo(emel) {
+    // Senarai ini TIDAK terdedah dalam client yang sebenar
+    // kerana ia akan berpindah ke GAS spreadsheet
+    // Ini HANYA untuk tujuan pembangunan / demo
+    Swal.close();
+    Swal.fire({
+        icon: 'info', title: '⚠ MOD DEMO AKTIF',
+        html: 'GAS Auth URL belum dikonfigurasi.<br>Semua emel <code>@risda.gov.my</code> diterima untuk tujuan ujian.',
+        background: '#0a0f0d', color: '#fff'
+    }).then(() => {
+        attemptCount = 0;
+        simpanSesi(emel, emel.split('@')[0]);
+        mainkanBunyi();
+        tunjukDashboard(emel, emel.split('@')[0]);
+    });
+}
+
+function tanganiGagal(emel) {
+    if (attemptCount >= CFG.MAX_ATTEMPTS) {
+        Swal.close();
+        tetapkanLockout();
+        return;
+    }
+    kemaskinWarning();
+    resetBtn();
+    Swal.fire({
+        icon: 'error', title: '🛑 AKSES DISEKAT',
+        text: 'Emel anda tidak mempunyai kebenaran akses Portal ini.',
+        background: '#0a0f0d', color: '#fff',
+        confirmButtonColor: '#dc3545'
+    });
+}
+
+function resetBtn() {
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fas fa-power-off me-2"></i>Akses Portal';
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// HASH EMEL (SHA-256) — emel tidak dihantar secara terus
+// ══════════════════════════════════════════════════════════════════════
+async function hashEmel(emel) {
+    const encoded = new TextEncoder().encode(emel.toLowerCase().trim());
+    const buf     = await crypto.subtle.digest('SHA-256', encoded);
+    return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PENGURUSAN SESI — sessionStorage (bukan localStorage)
+// sessionStorage dipadamkan auto apabila tab/browser ditutup
+// ══════════════════════════════════════════════════════════════════════
+function simpanSesi(emel, nama) {
+    const expiry = Date.now() + CFG.SESSION_MINUTES * 60_000;
+    const sesi   = { emel, nama, expiry };
+    // Enkripsi mudah dengan base64 (bukan kriptografi penuh, tapi tidak plain-text)
+    sessionStorage.setItem(CFG.STORAGE_KEY, btoa(JSON.stringify(sesi)));
+    sessionExpiry = expiry;
+}
+
+function bacaSesi() {
+    try {
+        const raw = sessionStorage.getItem(CFG.STORAGE_KEY);
+        if (!raw) return null;
+        const sesi = JSON.parse(atob(raw));
+        if (!sesi || !sesi.expiry || !sesi.emel) return null;
+        if (Date.now() > sesi.expiry) {
+            hapusSesi();
+            return null;
         }
+        return sesi;
+    } catch {
+        hapusSesi();
+        return null;
+    }
+}
 
-        function playFuturisticSuccess() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(); osc.stop(ctx.currentTime + 0.4);
-            } catch (e) {}
+function hapusSesi() {
+    sessionStorage.removeItem(CFG.STORAGE_KEY);
+    sessionExpiry = null;
+    if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+}
+
+// ── Perbaharui sesi (extend 30 minit apabila ada aktiviti) ──
+function perbaharuiSesi() {
+    const sesi = bacaSesi();
+    if (!sesi) return;
+    sesi.expiry = Date.now() + CFG.SESSION_MINUTES * 60_000;
+    sessionStorage.setItem(CFG.STORAGE_KEY, btoa(JSON.stringify(sesi)));
+    sessionExpiry = sesi.expiry;
+}
+
+// ── Timer sesi aktif ──
+function mulakanTimerSesi() {
+    if (sessionTimer) clearInterval(sessionTimer);
+    sessionTimer = setInterval(() => {
+        const sesi = bacaSesi();
+        if (!sesi) {
+            logoutAutomatik();
+            return;
         }
-        
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        const baki = Math.max(0, sesi.expiry - Date.now());
+        const m    = String(Math.floor(baki / 60_000)).padStart(2, '0');
+        const s    = String(Math.floor((baki % 60_000) / 1000)).padStart(2, '0');
+        const el   = document.getElementById('timerDisplay');
+        if (el) el.textContent = `${m}:${s}`;
 
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123) return false;
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-        };
+        if (baki <= 60_000 && baki > 0) {
+            const timerBadge = document.getElementById('sessionTimer');
+            if (timerBadge) timerBadge.style.borderColor = '#ff9944';
+        }
+        if (baki <= 0) { logoutAutomatik(); }
+    }, 1000);
+}
 
-        console.log("%c🛑 AMARAN KESELAMATAN!", "color: red; font-size: 40px; font-weight: bold; text-shadow: 1px 1px 5px black;");
-        console.log("%cRuangan ini adalah kawasan larangan. Sebarang percubaan memanipulasi kod sistem ini sedang direkodkan oleh pelayan Pusat.", "color: #c6a355; font-size: 16px; font-family: monospace;");
-        
-    </script>
+function logoutAutomatik() {
+    hapusSesi();
+    Swal.fire({
+        icon: 'warning', title: 'Sesi Tamat',
+        text: 'Sesi anda telah tamat. Sila log masuk semula.',
+        background: '#0a0f0d', color: '#fff'
+    }).then(() => { sembunyikanDashboard(); });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// UI — TUNJUK / SEMBUNYI
+// ══════════════════════════════════════════════════════════════════════
+function tunjukDashboard(emel, nama) {
+    const papar = nama || emel.split('@')[0];
+    document.getElementById('displayEmail').textContent = papar;
+
+    const loginSec = document.getElementById('login-section');
+    const dashSec  = document.getElementById('dashboard-section');
+
+    loginSec.style.opacity = '0';
+    setTimeout(() => {
+        loginSec.style.display = 'none';
+        dashSec.style.display  = 'flex';
+        void dashSec.offsetWidth; // reflow
+        dashSec.style.opacity  = '1';
+        mulakanTimerSesi();
+        resetBtn();
+    }, 500);
+}
+
+function sembunyikanDashboard() {
+    const loginSec = document.getElementById('login-section');
+    const dashSec  = document.getElementById('dashboard-section');
+
+    dashSec.style.opacity = '0';
+    setTimeout(() => {
+        dashSec.style.display  = 'none';
+        loginSec.style.display = 'flex';
+        void loginSec.offsetWidth;
+        loginSec.style.opacity = '1';
+        document.getElementById('emailInput').value = '';
+        resetBtn();
+    }, 500);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PROSES LOG KELUAR
+// ══════════════════════════════════════════════════════════════════════
+function prosesLogout() {
+    Swal.fire({
+        title: 'Log Keluar Portal?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#333',
+        confirmButtonText: 'Ya, Log Keluar',
+        cancelButtonText: 'Batal',
+        background: '#0a0f0d', color: '#fff'
+    }).then(result => {
+        if (result.isConfirmed) {
+            hapusSesi();
+            sembunyikanDashboard();
+        }
+    });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// BUNYI BERJAYA
+// ══════════════════════════════════════════════════════════════════════
+function mainkanBunyi() {
+    try {
+        const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.4);
+    } catch { /* ignore jika AudioContext tidak tersedia */ }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// EVENT LISTENERS
+// ══════════════════════════════════════════════════════════════════════
+
+// Form submit
+document.getElementById('loginForm').addEventListener('submit', prosesLogin);
+
+// Perbaharui sesi apabila pengguna aktif (klik / taip)
+['click', 'keydown', 'mousemove', 'touchstart'].forEach(ev => {
+    document.addEventListener(ev, () => {
+        if (bacaSesi()) perbaharuiSesi();
+    }, { passive: true });
+});
+
+// ── Semak sesi semasa halaman dibuka ──
+window.addEventListener('DOMContentLoaded', () => {
+    const sesi = bacaSesi();
+    if (sesi) {
+        tunjukDashboard(sesi.emel, sesi.nama);
+    }
+
+    // Semak jika ada lockout aktif
+    const kunci = bacaLockout();
+    if (kunci) { paparkanLockout(kunci.until); }
+});
+
+// ── Log amaran di console (kemas, tanpa data sensitif) ──
+console.log(
+    '%c🛑 AMARAN KESELAMATAN!',
+    'color: #dc3545; font-size: 36px; font-weight: bold;'
+);
+console.log(
+    '%cPortal ini dipantau. Sebarang percubaan memanipulasi sesi atau mengelak pengesahan adalah kesalahan yang boleh diambil tindakan.',
+    'color: #c6a355; font-size: 14px; font-family: monospace;'
+);
+
+</script>
 </body>
 </html>
