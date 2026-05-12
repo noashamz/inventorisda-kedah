@@ -123,17 +123,7 @@
             transition: opacity 0.3s;
         }
 
-        /* Session timer */
-        .session-badge {
-            background: rgba(0,255,136,0.1);
-            border: 1px solid rgba(0,255,136,0.3);
-            border-radius: 6px;
-            padding: 4px 12px;
-            font-size: 0.85rem;
-            color: var(--neon-green);
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-        }
+
 
         .btn-login {
             background: linear-gradient(45deg, var(--risda-green), #009955);
@@ -331,10 +321,7 @@
 
         <div class="header-right">
             <div class="user-info">
-                <span class="session-badge" id="sessionTimer" aria-label="Masa sesi aktif">
-                    <i class="fas fa-clock me-1" aria-hidden="true"></i>
-                    <span id="timerDisplay">30:00</span>
-                </span>
+
                 <div class="user-email" id="displayEmail" aria-label="Emel pengguna semasa"></div>
                 <button class="btn-logout" onclick="prosesLogout()" title="Log Keluar" aria-label="Log keluar dari portal">
                     <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
@@ -421,11 +408,11 @@ const CFG = Object.freeze({
     // ▸ Tukar kepada URL GAS Web App authenticator anda
     // ▸ GAS endpoint mesti menyemak emel dari spreadsheet (bukan hardcoded)
     // ▸ Lihat panduan di bawah fungsi ini
-    GAS_AUTH_URL: 'https://script.google.com/macros/s/AKfycbxNKqmmYc6cPcXQT_YHfi_LcdMkFZshmoleKjULiDUn5er5RwwcWeoUac3cOxlRpy1U/exec',
+    GAS_AUTH_URL: 'https://script.google.com/macros/s/AKfycbzQrq0BBqlBNP_YQxfZFArD6Baf-fCmTMnFFnX-sBXUkhZ-m8SzLRDTNos7MUX8a-f7/exec',
 
     MAX_ATTEMPTS:    5,          // Maksimum cubaan sebelum kunci
     LOCKOUT_MINUTES: 15,         // Tempoh kunci (minit)
-    SESSION_MINUTES: 30,         // Tempoh sesi aktif (minit)
+    SESSION_MINUTES: 120,        // Tempoh sesi aktif (minit) — 2 jam
     STORAGE_KEY:     'kdh_sess', // Kunci sessionStorage (bukan localStorage)
     LOCKOUT_KEY:     'kdh_lock', // Kunci lockout
     DOMAIN_SUFFIX:   '@risda.gov.my',
@@ -710,25 +697,40 @@ function perbaharuiSesi() {
     sessionExpiry = sesi.expiry;
 }
 
-// ── Timer sesi aktif ──
+// ── Timer sesi — latar belakang, amaran 5 minit sebelum tamat ──
+let _amaranDitunjuk = false;
 function mulakanTimerSesi() {
     if (sessionTimer) clearInterval(sessionTimer);
+    _amaranDitunjuk = false;
     sessionTimer = setInterval(() => {
         const sesi = bacaSesi();
-        if (!sesi) {
-            logoutAutomatik();
-            return;
+        if (!sesi) { logoutAutomatik(); return; }
+        const baki = Math.max(0, sesi.expiry - Date.now());
+        // Amaran 5 minit — papar sekali sahaja
+        if (baki <= 300000 && baki > 0 && !_amaranDitunjuk) {
+            _amaranDitunjuk = true;
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sesi Hampir Tamat',
+                html: 'Sesi anda akan tamat dalam <strong>5 minit</strong>.<br>Klik <em>Teruskan</em> untuk sambung semula.',
+                confirmButtonText: 'Teruskan Sesi',
+                confirmButtonColor: '#006837',
+                background: '#0a0f0d', color: '#fff',
+                timer: 290000,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+            }).then(result => {
+                if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+                    if (bacaSesi()) { perbaharuiSesi(); _amaranDitunjuk = false; }
+                }
+            });
         }
+        if (baki <= 0) { Swal.close(); logoutAutomatik(); }
+    }, 10000); // semak setiap 10 saat
+}
         const baki = Math.max(0, sesi.expiry - Date.now());
         const m    = String(Math.floor(baki / 60_000)).padStart(2, '0');
         const s    = String(Math.floor((baki % 60_000) / 1000)).padStart(2, '0');
-        const el   = document.getElementById('timerDisplay');
-        if (el) el.textContent = `${m}:${s}`;
-
-        if (baki <= 60_000 && baki > 0) {
-            const timerBadge = document.getElementById('sessionTimer');
-            if (timerBadge) timerBadge.style.borderColor = '#ff9944';
-        }
         if (baki <= 0) { logoutAutomatik(); }
     }, 1000);
 }
